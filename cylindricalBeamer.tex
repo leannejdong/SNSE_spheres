@@ -1,0 +1,754 @@
+
+%\documentclass[hyperref={pdfpagelabels=false}]{beamer}
+\documentclass[xcolor=dvipsnames,leqno]{beamer} 
+%\documentclass{beamer} 
+%\setbeamertemplate{navigation symbols}{}
+
+%\let\Tiny=\tiny
+
+%\mode<presentation> {
+%}
+\usetheme{Copenhagen}
+%\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
+\beamertemplatenavigationsymbolsempty
+%\usecolortheme{lily}
+%\usefonttheme{professionalfonts}
+%\setbeamercovered{transparent}
+%\setbeamertemplate{footline}[frame number]
+%\setbeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+%\setbeamertemplate{footline}[author]
+\setbeamertemplate{frametitle}
+{
+\begin{flushleft}
+%\backgroundcolor{Plum}
+%\usebeamercolor[bg]%\{bg=blue}
+\color{Blue}
+\textbf{\large\insertframetitle}
+\end{flushleft}
+}
+
+\setbeamertemplate{headline}
+{%
+  \leavevmode%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2ex,dp=1.125ex]{section in head/foot}%
+    \hbox to .5\paperwidth{\hfil\insertsectionhead\hfil}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2ex,dp=1.125ex]{subsection in head/foot}%
+    \hbox to .5\paperwidth{\hfil\insertsubsectionhead\hfil}
+  \end{beamercolorbox}%
+}
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+  \insertframenumber\,/\,\inserttotalframenumber} 
+\insertsectionhead 
+\insertsubsectionhead 
+
+%\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{setspace}
+%\usepackage[options]{mcode}
+%\usepackage{listings}
+\usepackage{algorithmic} 
+\usepackage{environ}
+\usepackage {mathrsfs}
+\NewEnviron{omitframe}{}
+\usepackage{lmodern}   
+\usepackage{bib entry}
+\nobibliography*
+\let\newblock\relax
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{upcol}{fg=black,bg=Periwinkle}
+\setbeamercolor{lowcol}{fg=black,bg=Periwinkle!40}
+     
+%\newcommand{\mb}[1]{\mathbb{#1}}
+%\newcommand{\alertline}{%   
+% \usebeamercolor[fg]{normal text}%
+% \only{\usebeamercolor[fg]{alerted text}}}
+%\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\newcommand*{\bigchi}{\mbox{\Large$\chi$}}
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+%\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+%\usecolortheme[named=Plum]{structure}  %\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newtheorem{algorithm}{Algorithm}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{defn}{Definition}
+\newtheorem{rmk}{Remark}
+\newtheorem{eg}{Example}   
+
+
+\title{Stochastic Navier-Stokes Equations perturbed by cylindrical L\'evy noise on 2D rotating sphere}
+
+\author[Leanne Dong]{Leanne Dong\\\vspace{1cm}{\small Supervised by: Prof. Ben Goldys}}
+\vspace{1cm}
+\institute[Usyd]{School of Mathematics and Statistics\\
+University of Sydney}
+%\titlegraphic{}
+\date{November, 2016}
+\setbeamersize{text margin left=0.5cm,text margin right=0.5cm}
+\begin{document}
+%\nobibliography*
+	\begin{frame}
+	  \titlepage
+	\end{frame}
+
+\section[]{Research rationales}  
+\begin{frame}{Research rationales}
+	\emph{Why study stochastic Navier-Stokes equations {\color{red}with noise, and L\'evy noise}?}
+	\begin{itemize}         
+		\item More informative than deterministic equations.
+		%\item The stochastic Navier-Stokes equations can model turbulence.
+		\item To prove in a ``Cheaper" way for unsolved problems.\\
+		\begin{itemize}
+			\item Clay millenium problem No. 3: Uniqueness in 3D is missing.
+		\end{itemize}
+		
+			%\begin{itemize}
+			%	\item Uniqueness of strong (smooth) solutions
+			%	\item {\color{purple}Uniqueness of weak solutions}
+			%\end{itemize}
+	\end{itemize}
+	\emph{Why L\'evy processes and Subordinated L\'evy processes?}
+	\begin{itemize}
+		\item At atomic scale, fluid are not continuous fields
+	%	\item Model complexity (especially turbulence, whether prediction) requires infinite dimensional analysis.
+		\item L\'evy processes are perfect candidates to model discontinuity in infinite dimensions.
+	\end{itemize} 
+\end{frame}
+
+\section{Problem formulation}
+\begin{frame}[shrink]{The Navier-Stokes equations}
+ We consider the stochastic Navier-stokes equations on the 2D unit sphere $\mathbb{S}^2\in (\theta,\phi)$ with rotation. Which is a system of 3 equations:
+%\left\{
+	\begin{align*}(1)
+		\begin{cases}
+			\partial_t u+ (u\cdot\nabla)u-\nu\Delta u+\omega\times u+\nabla p=f+\partial_t \tilde{L}(t),\quad\text{on} \quad (t, x)\in (0, T)\times\mathbb{S}^2\\
+			&\\
+			\nabla\cdot u=0,\qquad\text{on} \quad (t, x)\in[0, T)\times\mathbb{S}^2, \quad{\color{RedOrange}\text{Incompressible condition}}\\
+			&\\
+			u(0)=u_0, \qquad\text{Initial conditions}	
+		\end{cases}	
+	\end{align*}  
+%\right\}	        
+\begin{itemize}
+	\item $u, p, \nu$ are respectively velocity, pressure and viscosity;
+
+	\item The external force is modelled by an arbitrary cylindrical L\'evy process $\tilde{L}(t)$, which can be viewed as a generalisation of a  $\mathbb{R}^n$ L\'evy processes to infinite dimensional spaces.% as the following %such that the projection of it gives us a classical L\'evy process.
+\end{itemize}
+\end{frame}
+\begin{frame}
+	The sphere can be viewed as a surface embedded into $\R^3$, hence, given any two vector fields $u$, $v$ on $\mathbb{S}^2$, we can find vector fields $\tilde{u}$ and $\tilde{v}$ defined on some nbhd of the surface $\mathbb{S}^2$ such that their restriction to $\mathbb{S}^2$ are equal to, resp. $u$ and $v$, namely,
+	\begin{align*}
+		\tilde{u}|_{\mathbb{S}^2}=u\in T\mathbb{S}^2\quad\text{and}\quad\tilde{v}|_{\mathbb{S}^2}=v\in T\mathbb{S}^2 
+	\end{align*}
+So, define orthogonal projection $\pi_x:\R^3\to T_x \mathbb{S}^2$
+
+Then usual spherical calculus can be used to calculate standard curl and div operators.
+\end{frame}
+\begin{frame}{The Navier-Stokes equations}
+To incorporate the {\color{RedOrange}incompressibility constraint}, we introduce a divergence-free function space $E$. %, which is the closure of the space of divergence free vector field in $L^2(\mathscr{O}; \mathbb{R}^2)$. 
+$V$ is the closure of the divergence free space in the Sobolev space $H^1$. 
+% a closed subspace of $L^2(\mathscr{O}; \mathbb{R}^2)$. 
+%Let
+\begin{align*}
+	H&=\{u\in (\mathbb{L}^2(\mathbb{S}^2): \nabla\cdot u=0\},\\
+		V&=\{u\in (\mathbb{H}^{1}(\mathbb{S}^2))^2\}=H\cap\mathbb{H}^1(\mathbb{S}^2).
+\end{align*}
+Let $(\Omega,\mathscr{F},\mathrm{P})$ be a probability space. %The space of equivalence classes of measurable functions $f : \Omega\to U$ is denoted by $L_{\mathrm{P}}^{0}(\Omega; E)$ and it is equipped with the topology of convergence in probability. 
+\begin{align*}
+		{\color{blue}L(t) :=W(Z(t)) : \Omega\to H,\quad  L(t)u^{*}}
+\end{align*}
+{\color{blue}defines a cylindrical L\'evy process in $H$},
+where $W(t)$ is a cylindrical Wiener process on $U$ such that $H\hookrightarrow U.$  The subordinator process $Z(t)$ takes values in $\R.$
+\end{frame}
+\begin{frame}{Weak formulation of Stochastic Navier Stokes Equations}
+\begin{itemize}
+	\item Orthogonal-projection $P_L : H\to H_L$
+	%\item Let $\mathcal{P}$ be the Leray-Hopf operator. It is often written as
+	 %it is a matrix valued Fourier multiplier given by
+	\begin{align*}
+		P_L&=\text{Id}-\Delta^{-1}(\nabla\otimes\nabla).
+	\end{align*}
+	%It is an orthogonal projection of $(L^2(\mathscr{O}))^2$ onto $E$, which  
+ $P_L$	decomposes the velocity vector into its {\color{purple}divergence free part} and the {\color{orange}gradient of the scalar part}, that is, 
+	\begin{align*}
+		u={\color{purple}P_L[(u\cdot\nabla)u]}+{\color{orange}\nabla \phi}
+	\end{align*}
+	\item Define $A: D(A)\to H$ by $Au=-\nu P_L\Delta u$, $D(A)=(H^2(\mathbb{S}^2))^2\cap V$.
+	\item Define $B: V\times V\to V^{*}$ by $B(u,v)=P_L[(u\cdot\nabla)v]$.
+	\item $L(t)=P_L\tilde{L}(t)$.%, $\tilde{L}(t)$ is a cylindrical L\'evy process takes value in $E$.    
+	\item $B(u)=P_L[\, \text{div}(u\otimes u)\, ]=P_L[\text{div} \, uu^{T}]=B(u,u)$%\mathcal{P}[(u\cdot\nabla) u]$
+\end{itemize}	
+\end{frame}
+\begin{frame}
+Then, projecting (1) onto $H$ yields 
+\begin{align*}
+	\begin{cases}
+	u_t=-\nu Au-B(v+z,v+z)-Cv+z+f+ L(t),\,\,(t, x)\in (0, T)\times\mathbb{S}^2 \\
+		u(0)=u_0\in H
+	\end{cases}
+\end{align*}
+%leads to the abstract equations, which is the version of two-dimensional Stochastic Navier-Stokes equations in $u=u(t)=u(t,x)$ 
+Suppose we have solved the projection problem (2) by finding the mild solution $u=P_L u$, how do we recover the pressure from its projection?\\
+\vspace{1cm}
+\textbf{Answer}: By Hodge decomposition, the pressure satisfies
+%	\[
+%		\mathcal{P}u=u
+%		\]
+%	for $u$. This leads to
+%		\begin{align*}
+%			u-\Delta^{-1}(\nabla\otimes\nabla)u&=u\\
+%			\Delta u-(\nabla\otimes\nabla)u&=\Delta u
+%		\end{align*}
+\[
+	\nabla p=\nu\Delta u+(u\cdot\nabla)u-\partial_t \tilde{L}(t)-\mathcal{P}[-\nu\Delta u+(u\cdot\nabla)u-\partial_t \tilde{L}(t)]
+\]
+Solve for $u$, Substitute $u$ back to (1), we can recover $\nabla p$ in term of forcing term and the solution $u$.
+\end{frame}
+     
+\begin{frame}{My problem}  
+Projecting (1) onto $H$ leads to a version of the two-dimensional Navier-Stokes equation of our interest, which is the abstract equation in $u=u(t)=u(t,x)$:
+	\begin{align*}\tag{2}%\label{iacp1e}
+			\begin{cases}
+		        du(t)+(Au(t)+B(u(t)))dt+Cu=fdt+GdL(t), \qquad t>0\\
+				u(0)=u_0\in V%\,\,x\in\mathbb{R}
+			\end{cases}
+	\end{align*}  
+%	has the mild form cylindrical solution of the form
+We assume $A$ generate a strongly continuous semigroup $\{S(t): t\geq 0\}$ on $X$.  $\{u(t)\in X,t\geq 0\}$ is said to be a mild solution of (1) if
+		\begin{align*}
+			u(t)&=S(t)u_0-\hspace{-0.15cm}\int_{0}^{t} S(t-s)B(u(s))ds+\hspace{-0.15cm}\int_{0}^{t}[S(t-s)]GdL(s).\tag{3}
+	%		&=S(t)u(0)-\int_{0}^{t}S(t-s)B(u(s)+L_{A}(s))ds\tag{4}
+	%		&=S(t)u_0+F(u+L_A)(t)
+		\end{align*}
+%is satisfied for every $u(0)$.
+%	{\color{red} Aim}: Well-posedness, regularity and ergodicity of the mild solution
+\end{frame} 
+\begin{frame}{Weak formulation of Stochastic Navier Stokes Equations}
+	Define $z(t)=L_A(t)=\int_{0}^t S(t-s)GdL(s)$ as the solution of
+	\begin{align*}
+		\begin{cases}
+			dz(t)+\hat{A}z(t)=dL(t), t\geq 0\\
+			z(0)=0
+		\end{cases}
+	\end{align*}
+With this definition, (3) can be written as
+\begin{align*}
+	u(t)=S(t)u(0)+\int_{0}^{t}S(t-s){\color{purple}B}(u(s)+z(s))ds
+\end{align*}
+\end{frame}
+\subsection{Problem: Existence and Uniqueness of $u$}
+\begin{frame}[shrink=10]{Concept of solutions}
+\begin{defn}
+	\begin{itemize}
+		\item A stochastic process $\{u(t): t\geq 0\}$ is called a \textbf{classical\footnote{I doubt there is indeed a ``classical solution''exist in stochastic sense, usually we speak about ``strong solution'' instead} solution} if $u$ is sufficient smooth in $(t, x)$ and (1) holds for  each $(t, x)$ with probability 1.
+		\item The stochastic process $\{u(t): t\geq 0\}$, given by the abstract integral equation	   
+			\begin{align*}
+				u(t)&=S(t)u(0)-\int_{0}^{t} S(t-s)B(u(s))ds+\int_{0}^{t}[S(t-s)]dL(s)\\
+				&=S(t)u(0)-\int_{0}^{t}S(t-s)B(u(s)+L_{A}(s))ds
+		%		&=S(t)u_0+F(u+L_A)(t)
+			\end{align*}
+		 is called a \textbf{mild solution} of (1).%, with $u_0\in E$ if (2) holds
+%	if
+%		\begin{align*}
+%			\sup_{t>0}\mathbf{E}\|u(t)\|_{E}^{p}<\infty,\quad p\geq 2
+%		\end{align*}
+		\item An stochastic process $\{u(t): t\geq 0\}$ is called a \textbf{weak solution} of (1) if we have%, with $u_0\in E$ if  %it is weakly progressively measurable and for every $\nu^{*}\in D(A^{*})$ and $t\in [0,T]$ we have, $\mathrm{P}$-a.s.,
+		\begin{align*}
+			\langle u(t),u^{*}\rangle=\langle u_{0},u^{*}\rangle-\int_{0}^{t}\langle u(s), A^{*}u^{*}\rangle-\int_{0}^{t}\langle B(u(s)),u^{*}\rangle ds+\langle L(t),u^{*}\rangle
+		\end{align*}	
+		for all $u^{*}\in D(A^{*})\subset E^{*}$. %and $t\geq 0$
+	\end{itemize}
+\end{defn}
+\end{frame}   
+\begin{frame}{Problem: Existence and Uniqueness of $u$}
+\vspace{0.3cm}	
+	%			\fbox{
+%				  \parbox{\textwidth}{   
+%\begin{beamerboxesrounded}[upper=upcol,lower=lowcol]%,shadow=true]
+\begin{block}{Question 1: Existence and Uniqueness of solutions }
+Let $L(t) : \Omega\to E$ be an arbitrary cylindrical L\'evy process. Given $u(0)=u_0$, some random initial data in $E$, does the solution of 
+\begin{align*}
+	du(t)+(Au(t)+B(u(t)))dt=dL(t)
+\end{align*}
+always exist as a true stochastic process in $E$? Is it unique?
+%\end{beamerboxesrounded}  	
+\end{block}		
+			%}}\\   
+	%knowing that the cylindrical weak solution always exist		}}\\
+%\vspace{0.3cm}
+%	First, we shall define what do we mean by ``solution'' in our case.
+\end{frame}
+\begin{frame}{Existence proof}
+To establish existence:
+	\begin{itemize}
+		 \setlength{\itemsep}{20pt}
+		\item Construct approximate solutions
+		\begin{itemize}
+			\setlength{\itemsep}{10pt}
+			\item Fixed point (Picard) iteration
+			\item Galerkin methods
+		\end{itemize}
+		   
+		\item Derive a-priori energy estimates for approximate solutions
+		       
+		\item Show approximate solutions converges
+		\begin{itemize}
+			 \setlength{\itemsep}{10pt}
+			\item Fixed point arguments (for strong convergence)
+			\item Compactness arguments  (for weak convergence)
+			%mild solutions require strong estimates in the strong topology
+			%contraction implies uniqueness
+%	Since Compactness + uniqueness = contraction
+%Hence instead of showing convergence using fixed point arguments, one can use Galerkin approximation and show uniqueness
+%Note: two types of fixed point methods: contraction mapping or Brouwer fixed-point theorem (no uniquenss, have to prove it separately)
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Problem: Existence and Uniqueness of $u$}
+		\begin{itemize}
+			\setlength{\itemsep}{20pt}
+			\item Classical solution (Hadamard): Very difficult except for special cases;
+			\item Weak solution (Leray): Approximate solutions via Galerkin method. Use compactness arguments and \emph{a priori} energy estimates;
+			\item Mild solution (Yosida): Short time existence proof uses a Picard algorithm, which extends for all time using a-priori energy estimates. %This is also called the \textbf{semigroup approach}. 
+			This solution is well-posed.
+		\end{itemize}
+		%Riedle study the mild solution of IACP, i.e. the classical solution of IACP  satisfied the variation of constant formula, in term of his proof of existence of solutions, it is essentially a semigroup approach using his theory of cylindrical processes. hence
+		\vspace{0.5cm}
+	We shall study mild solutions, establish the existence proof, and prove that this mild-form solution is regular enough and to obtain a classical solution of the system (1).
+\end{frame}       
+
+%\begin{changemargin}{-0.5cm}{-0.5cm}   
+\begin{frame}{Problem: Existence and Uniqueness of $u$}
+To construct a solution  
+\begin{align*}
+	u(t)&=S(t)u(0)-\int_{0}^{t} S(t-s)B(u(s))ds+\int_{0}^{t}[S(t-s)]dL(s)
+\end{align*}
+We first split (2) into a deterministic nonlinear PDE and a stochastic integral. In fact $v(t)=u(t)-Z(t)$ solves
+			\begin{align*}\tag{4}
+				\begin{cases}					v_t(t)+Av(t)+F(v(t)+Z(t))=0, t\geq 0\\
+					v(0)=u_0%(x)\in H\,\,x\in\mathbb{R}
+				\end{cases}	
+			\end{align*}
+We shall interpret this transformed system as an integral equation
+\begin{align*}\tag{5}
+	v(t)&=S(t)v_0+{\color{orange}\int_{0}^{t}S(t-s)B(v(s)+Z(s))ds}\\
+	&=S(t)v_0+F(v+Z)(t),\,\,t\in[0,T].
+\end{align*}
+   
+%we shall now move to regularity
+
+%		 In cylindrical sense (Riedle and Applebaum 2010), (cylindrical) weak solution always exist! 
+%		The preprint\\
+%			\bibentry{riedle2012ornstein}\\
+%	Riedle (2013) is the basis to apply integration theory for deterministic integrand in Banach space to our problem.    
+\end{frame} 
+%\end{changemargin} 
+
+\begin{frame}{Tackling Existence and Uniqueness of $u$}
+\emph{What are the problem?} 
+\begin{align*}\tag{3}
+	u(t)&=S(t)u(0)-\int_{0}^{t} S(t-s)B(u(s))ds+{\color{red}\int_{0}^{t}[S(t-s)]dL(s),}
+\end{align*}
+or
+\begin{align*}
+(5)\quad\hspace{-0.20cm}	v(t)\hspace{-0.10cm}&=S(t)v_0\hspace{-0.10cm}+\hspace{-0.15cm}{\color{orange}\int_{0}^{t}\hspace{-0.15cm}S(t-s)B(v(s)+Z(s))ds}\,\,\,\text{and}\,\,\, Z(t)\hspace{-0.35cm}&=\hspace{-0.15cm}{\color{red}\int_{0}^t\hspace{-0.20cm}S(t-s)dL(s)}
+\end{align*}
+%\emph{What can be done?}
+	\begin{itemize}
+%		\item In classical theory of Banach-space valued SPDE, the solutions to the Cauchy problem do not always exist when initial condition is taken as a random variable.
+%		\item The cylindrical solutions always exist and it is unique under the cylindrical approach.
+%		\item One can show the cylindrical solution is induced by a usual stochastic process.
+		\item Recently, {\color{purple}a theory of stochastic integration with respect to cylindrical L\'evy process} is developed in Riedle (2012).
+		\item This allows us to show a weakly Bochner regular solution always exist as a true stochastic process in $E$.
+%		\item Our goal would be to extend the type of analysis to the stochastic Navier-Stokes equations.%, given we know, what has been achieved in the linear case.
+		\item  A new challenge to us will be to include the  non-local operator $B$ either from the integral equation (3) or via the two equations in the transformed system: $Z(t)$ and (5). 
+		%\begin{itemize}
+		%	\item Transform to vorticity equations?
+		%	\item Liouville theorems for non-local operators?
+		%\end{itemize}
+	\end{itemize}
+%	In standard theory of Banach-space valued SPDE, where initial condition is taken as a random variable, it is known that solutions do not always exist even in simplest cases, like the Ornstein-Uhlenbeck diffusion with Wiener noise. However, using cylindrical processes it has been shown that the cylindrical solutions always exist and they are unique. It has also been shown the cylindrical solution is induced by a usual stochastic process. Furthermore, with a recently developed integration theory, it is known that a weakly Bochner regular solution always exist as a true stochastic process in $E$.	    Our goal would be to extend this type of analysis to the stochastic Navier-Stokes equations. The functional $B(\cdot)$ in the integral term of (5) induces a non-local nature to the solution. One of the new difficulties of the problem will be to include the nonlinear and non-local operator $B$ either from the integral equation (3) corresponds to the first abstract equation, or via the two equations: $Z(t)$ and (5)  corresponds to the transformed abstract equations.
+\end{frame}
+\begin{frame}{Tackling Existence and Uniqueness of $u$}
+	\begin{itemize}
+		\item The cylindrical process
+	\[
+		Z(t)=L_A(t)=\int_{0}^{t}S(t-s)dL(s)
+	\]has been studied.
+		\item It uses the new integration theory of Riedle (2012). We interpret the integral equation for $v$ using this definition of an Ornstein-Uhlenbeck type process $Z$.
+		\item  The objective is to show the integral equation (5) is weakly Bochner regular.
+	\end{itemize}	
+%\tiny{
+%\begin{defn}
+%	A $E$-valued stochastic process $(u(t) : t\geq 0)$ is called \emph{weakly Bochner regular} if for every sequence $(g_n)_{n\in \mathbb{N}}\subseteq C([0,T]; E^{*})$ with $\sup_{s\in [0,T]}\|g_n(s)\|_{E^{*}}\to 0$ there exists a subsequence $(g_{n_k})_{k\in\mathbb{N}}$ such that 
+%	\begin{align*}
+%		\int_{0}^{T}\langle u(s), g_{n_k}(s)\rangle ds\to 0\quad\mathbf{P}-\text{a.s. as}k\to\infty
+%	\end{align*}
+%\end{defn} 
+%Note: if $u$ has a.s. Bochner integrable paths on $[0,T]$ the process $u$ is also weakly Bochner regular.}
+\end{frame}   
+ 
+%Think classical sense first, weak solutions has no decent regularity, regularity is about try to prove some better behaved properties
+\subsection{Spatial and temporal regularity of solutions}
+
+\begin{frame}{Regularity}
+We also study the problem of regularity of the solution of 
+		$$%\tag{2}%\label{iacp1e}
+			        du(t)+(Au(t)+B(u(t)))dt=dL(t), \qquad u(0)=u_0\in E%\,\,x\in\mathbb{R}
+		$$
+on a Banach space $E$,
+where
+\begin{itemize}
+	\item $L(t)$ is an arbitrary cylindrical L\'evy process in $E$. %(c\`adl\`ag means right continuous with left limit)
+	\item $A$ generates a strongly continuous semigroup $(S(t))_{t\geq 0}$ on $W\subset E$, $S(t)\in L(E, W)$, for all $t>0$. $W$ is some separable Banach space of order $p\in [1,2]$.
+\end{itemize}
+\begin{block}{Problem 2: Spatial regularity}
+Under what conditions, does the solution $u$ attain values in the smaller space $W$ although the noise lives in a larger space $E$? 
+\end{block}
+\begin{block}{Problem 3: Temporal regularity}
+If the solution $u$ does take value in $W$, does it have a c\`adl\`ag version in $W$?	
+\end{block}
+\end{frame}
+\begin{frame}{Regularity}
+	%	has the mild form cylindrical solution of the form
+%			\begin{align*}
+%				u(t)&=S(t)u(0)-\hspace{-0.15cm}\int_{0}^{t} S(t-s)B(u(s))ds+\hspace{-0.15cm}\int_{0}^{t}[S(t-s)]dL(s)%\tag{3}
+		%		&=S(t)u(0)-\int_{0}^{t}S(t-s)B(u(s)+L_{A}(s))ds\tag{4}
+		%		&=S(t)u_0+F(u+L_A)(t)
+		%	\end{align*}
+
+%It is of prime interest in the study of nonlinear Stochastic PDE as it allow many desired structural properties of solution. 
+\begin{block}{General message (Peszat and Zabczyk)}
+	\begin{itemize}
+		\item  $u(t)$ may takes value in $W$.
+		\item  But may not be $W$-c\`adl\`ag.
+		\item  The c\`adl\`ag property for an equation with L\'evy noise is less likely for equations with Gaussian noise.
+	\end{itemize}
+%	Usually, when the integrator is a c\`adl\`ag process one cannot expect better than c\`adl\`ag.
+	
+%	If $u_0$ and $L(t)$ all in $E$, then $u$ has a c\`adl\`ag modification.  Otherwise, this may not be the case.
+\end{block}  
+\vspace{1cm} 
+We shall find conditions under which the $W$-c\`adl\`ag property does hold. This is a temporal regularity result. 
+\end{frame}
+\begin{frame}{Problem: Spatial regularity}       
+%\begin{block}{Problem 2: Spatial regularity}
+%If the operator $S(t) : E\to E$ have in fact range in a smaller Banach space $W\subset E$, i.e. $S(t)(E)\subset W$ for all $t>0$, does then the solution $u$ attain values in the smaller space $W$ although the noise lives in a larger space $E$? 
+%\end{block}
+We shall study regularity under the assumption that the process $L(t)$ is a subordinated cylindrical Wiener process
+%This arises from the case where the noise $L(t)$ modelled by a subordinated cylindrical Wiener process.
+\begin{align*}
+	L(t)=\mathcal{W}(T(t)),\quad t\geq 0
+%	W\subset H_C\subset E,\quad \mathcal{W}(0)\in E
+\end{align*}
+for $\mathcal{W}$ a $E$-valued cylindrical Wiener process and $T$ is a real-valued subordinated process with L\'evy measure $\rho$ in $\mathbb{R}$.\\
+\vspace{1.5cm}
+{\color{purple}We shall show that $Z(t)=L_A(\cdot)\in D((-A)^{\gamma})$ for some $\gamma>0$, that is $(-A)^{\gamma}L_A(t)$ is defined for each $t>0$.}
+\end{frame}
+\begin{omitframe}
+\begin{frame}{Tackling spatial regularity}
+\begin{spacing}{1.5}
+Currently there are two approaches to study cylindrical L\'evy process: Da Prato and Zabczyk (DZ) versus Riedle. I hope to study our problem using the developed integration theory in Riedle (2012), our goal is to derive integrability condition for the Semigroup $\mathbf{S}$ such that the solution takes value in $W$. We choose to work with Riedle's approach as it allows us to a new integration theory to conveniently study the integrals terms of the solution in a concrete way. This integration theory was not available at the time where DZ's approach developed. In particular, our rationales are the following:
+\end{spacing}     
+\end{frame}
+\begin{frame}{Tackling spatial regularity}
+	\begin{itemize}
+		\item For the \textbf{Wiener case}, Riedle's approach is a \textbf{systematic reformulation} of DZ's approach as no conditions are assumed on the covariance operator.
+		\item For the \textbf{L\'evy case}, Riedle's approach provides a \textbf{general theory} which describes the complete set of cylindrical Levy processes in comparison with the specific examples studied by DZ, such as $\alpha$-sable type cylindrical L\'evy noise.
+		\item DZ's approach require formulation of the noise in a larger space, which is quite nonnatural and often leads to conditions formulated in terms of this larger space which is not related to the model under consideration. In Riedle's approach,  the use of stochastic integration theory in Riedle's approach naturally allows the cylindrical process coincide with the classical process in $E$.
+		%\item The approach by cylindrical measures and cylindrical random variables relates our problems with other well developed area of mathematics and it shall produce us some powerful results.
+	\end{itemize}
+\end{frame}
+\end{omitframe}   
+\begin{frame}{Problem: Temporal regularity}
+%For the previous example, assume $S(t)$ on $E$, we want to see whether the solution 
+%\fbox{
+%  \parbox{\textwidth}{
+%{\color{BlueViolet} Q} 
+%\begin{beamerboxesrounded}[upper=upcol,lower=lowcol,shadow=true]
+\begin{block}{C\`adl\`ag property}
+	The  c\`adl\`ag property is fundamental for establishing the strong Markov property of the solution and for various localisation procedures.
+\end{block}
+Since $Z=L_A$ determines how irregular the nonlinearity can be, the starting point of any study is the linear equation
+	\begin{align*}
+	\begin{cases}
+		dZ(t)=AZ(t)dt+dL(t),\quad\text{for}\,\,t\in[0,T],\\
+		Z(0)\in E
+	\end{cases}
+	\end{align*} 
+%\begin{block}{Problem 3: Temporal regularity}
+%Temporal regularity: If the solution of (2), the goal is to determine under what condition there is an $E$-valued c\`adl\`ag independent $\tilde{u}$. This modification satisfies
+%\begin{align*}
+%	\mathrm{P}(\tilde{u}(t)=u(t))=1,\quad\forall\,t\geq 0
+%\end{align*}
+
+% i.e. $u(t)_{t\geq 0}$ takes value in $E$ for all $t$. Is there a $E$-valued c\`adl\`ag modification of $u$ ? i.e. $\exists$ ? a $E$-valued c\`adl\`ag $(\tilde{u}_t)_{t\geq 0}$ such that
+%	\begin{align*}
+%		\mathrm{P}(u(t)=\tilde{u}(t))=1,\quad\forall t
+%	\end{align*}
+%	}}    
+%\end{beamerboxesrounded}
+%\end{block}
+\vspace{1cm}
+{\color{purple}We shall obtain some conditions under which the trajectories of $L_A$ are H\"{o}lder continuous for some $0<\alpha<1/2$. That is 
+\begin{align*}
+	\mathbf{E}\|L_A(t)-L_A(t')\|_{E}\leq C|t-t'|^{\alpha}
+\end{align*}}
+\end{frame}    
+\subsection{Ergodicity: Invariance measures}
+\begin{frame}{Problem: Ergodicity (Invariance Measure)}
+%	$L(t) : E^{*}\to E$ is a cylindrical L\'evy process.
+%Finding the invariance measure solves the turbulence problem as all the statistical properties of the turbulence velocity are determined by the invariance measure.
+%\begin{itemize}
+%	\item All the statistical properties of the turbulence velocity are determined by the invariance measure.
+%	\item Finding the invariance measure solves the turbulence problem.
+%	\item Invariance measures may not be unique, 
+%	\item But the statistical theories are equivalent since the invariance measures corresponding to different weak solutions are absolutely continuous with respect to each other.
+%\end{itemize}    
+%	The invariance measure describes the long term behaviour of a dynamical system.
+We shall study the existence of the \textbf{stationary} solution of the stochastic Navier-Stokes equations and find condition under which such a solution is unique. For a stationary solution, we require that 
+	\begin{align*}
+		\mathbf{E}[\varphi(u(t))]
+	\end{align*}
+is independent of $t\geq 0$ for any $\varphi$ bounded and continuous function on $E$. 	This condition can also be expressed in term of an invariance probability $\mu$ on $E$ for the appropriate strong feller semigroup, that is, 	
+\begin{align*}
+			\lim_{T\to\infty}\frac{1}{T}\int_{0}^{T}P(t)\varphi(x)dt=\int_{E}\varphi(x)\mu(dx)
+\end{align*}    
+		In a physical sense, the ``temporal'' average coincides with the ``spatial'' average.
+\end{frame}
+% In experiments and simulation, one often looks for an average probability 
+%\[
+%	\bar{u}=\langle u\rangle
+%\]
+%This mean is an expectation. A probability measure $\mu$ on some function space $E$ is invariant if
+%\begin{align*}
+%	\mathbf{E}[\varphi(u)]=\int_{E}\varphi(u)d\mu(u),\quad\text{where }\varphi\text{ is any bounded function on E}
+%\end{align*}
+%  By mean of studying invariance measures,
+ %Here we study the Markov property in the cylindrical sense of the solution . In particular, we ask
+%	\fbox{      
+%	  \parbox{\textwidth}{
+%{\color{OrangeRed}Q}
+%\begin{beamerboxesrounded}[upper=upcol,lower=lowcol,shadow=true]
+\begin{frame}{Problem: Ergodicity (Invariance Measure)}
+
+ The goal is to find the probability measure $\mu$ such that the distribution of $u(t)$: $\mu_t$ is independent of time, that is
+\begin{align*}
+	\int_{E}\varphi(x)\mu_{{\color{red}t}}(dx)=\int_{E}\varphi(x)\mu(dx)
+\end{align*}
+		for all $t\geq 0$. This stationary solution is related to the limiting behaviour of the solutions to the stochastic Navier-Stokes equation.
+\begin{block}{Problem 4: Invariance measure}    
+	\begin{itemize}   		
+		\item Under what conditions does a \textbf{stationary}  solution of Stochastic Navier-Stokes equations exist?
+		\item Under what conditions is the \textbf{stationary} solution a stochastic process in the usual sense?
+	\end{itemize}   
+%\end{beamerboxesrounded}
+\end{block}
+%	}}
+%There is no literature on invariance measures to the solutions of SNSE under the systematic framework, i.e. in case of general cylindrical L\'evy processes. There is a literature in case of $\alpha$-stable type cylindrical L\'evy processes (c.f. Dong, Xu and Zhang 2011)%\cite{MR2853105}. The nonlinear effect of the noise terms on vectors in the dual space of a Banach space, which makes the ``large jumps'' difficult to evaluate. Hence we shall restrict us to the squared cyl. L\'evy process with well-behaved (bounded linear) covariance operator. We shall refer readers to Riedle and Applebaum or our proposal for more detail.           
+\end{frame}
+              
+\section[]{Aims of Research}  
+\begin{frame}{Aims of Research}    
+%	In this thesis we study a class of stochastic evolution equations in a Banach space E driven by cylindrical L\'evy process and the concepts of solutions: strong, weak, mild. Our aims are
+In this thesis, our aim is to implement stochastic integration theory with respect to cylindrical L\'evy process to study the  solutions to Stochastic Navier-Stokes equations. Specifically, we focus on
+	\begin{itemize}
+%		\item Prove existence, uniqueness of global weak and strong solutions to the Navier-Stokes equations and the Burger equations, both with additive L\'evy noise in 2D;
+		\item Well-posedness. %existence and uniqueness of solutions
+		\item Spatial and time regularity.
+		\item Structural properties.
+		\item Ergodicity (invariance measure). %existence and uniqueness of stationary solutions
+%		\item \textbf{investigate other structural properties: Markov, irreducibility, stochastic continuity, Feller and strong Feller properties, integrability of trajectories of the solution of Stochastic Navier-Stokes equations}.
+	\end{itemize}   
+by mean of generalising the following:
+\begin{itemize}
+	\item Bensoussan and Temam (1973): Well-posedness.
+	\item Flandoli (1994, 1995): Existence and Uniqueness of invariance measure.
+	\item  Brze\'zniak and Zabczyk (2010): Well-posedness, Spatial regularity.
+	\item  Peszat and Zabczyk (2012), Liu and Zhai (2012): Well-posedness, Temporal regularity.
+	\item Priola and Zabczyk (2011): Structural properties.
+	\item Dong, Xu and Zhang (2011): Invariance measure.
+\end{itemize}
+\end{frame}              
+    
+\begin{omitframe}   
+\section[]{Methodology}
+\begin{frame}[shrink]{Methodology in brief}
+	\begin{itemize}      
+		\item Well-posedness: initial condition is assumed to be a random variable in the spirit of Applebaum and Riedle (2010), the main tool is a stochastic integration theory with respect to cylindrical L\'evy processes in Riedle (2012).
+		\item Regularity:   cylindrical L\'evy measure, Radonifying operators.
+		\item Ergodicity (Invariance measure) : Standard semigroup arguments, such as Krylov-Bogolyubov theorem ( using Feller and strong Feller property of the solutions) are used to deduce sufficient condition of stationary measure and the uniqueness for stationary distribution, which is in Applebaum and Riedle (2010).
+	\end{itemize} 
+%\begin{block}   
+	Classical functional-analytic methods (Da Prato, Zabczyk) also help us to understanding the behaviour of the solution.
+%\end{block}
+\end{frame}       
+%\section[]{Literature and main contributions}
+\end{omitframe}   
+%\section[]{Mathematical Preliminary}
+%\section[]{Cylindrical L\'evy processes and stochastic integration in Banach spaces}
+  
+\begin{omitframe}
+\begin{frame}{(cylindrical) L\'evy-Khintchine formula}
+	\begin{thm}[Applebaum and Riedle 2010]%\cite{MR2734958}
+		Let $(L(t) : t\geq 0)$ be a cylindrical L\'evy process. Then there exist
+		\begin{itemize}
+			\item a mapping $p : U^{*}\to\mathbb{R}$,
+			\item a quadratic form $q : U^{*}\to\mathbb{R}$,
+			\item a cylindrical measure $\nu$ in $U$.
+		\end{itemize}
+		such that the characteristic function $\varphi_{L(1)}: U^{*}\to\mathbb{C}$ is of the form:
+	\begin{align*}
+		\varphi_{L_{1}}(a)=\exp\left(ip(a)-\frac{1}{2}q(a)+\int_{U}(e^{i\langle u, a\rangle}-1-i\langle u, a\rangle\chi_{B_1}(\langle u, a\rangle))\nu(du)\right)
+	\end{align*}
+	where $B_1 :=\{s\in\mathbb{R}: |s|<1\}$
+	\end{thm}
+\end{frame}
+\begin{frame}[shrink]{(cylindrical) L\'evy-Khintchine formula}
+	Let $\nu$ be a cylindrical measure on the sets of cylinders; $p, q: U^{*}\to\mathbb{R}$ be some functions.
+	Then the following are equivalent:
+	\begin{itemize}
+		\item[(a)] There exists a cylindrical L\'evy process $(L(t) : t\geq 0)$ with
+		\begin{align*}
+			\varphi_{L(1)}(a)=\exp\left(ip(a)-\frac{1}{2}q(a)+\int_{U}(e^{i\langle u, a\rangle}-1-i\langle u, a\rangle\bigchi_{B_1}(\langle u, a\rangle))\nu(du)\right)\\
+			\intertext{or}
+			\varphi_{L(t)}(a)=\exp\left(t\left(ip(a)-\frac{1}{2}q(a)+\int_{U}(e^{i\langle u, a\rangle}-1-i\langle u, a\rangle\bigchi_{B_1}(\langle u, a\rangle))\nu(du)\right)\right)
+		\end{align*}
+		\item[(b)]     
+		\begin{itemize}
+			\item $p(0)=0$;
+			\item $p(a_n)\to p(a)$ for $a_n\to a$ in every finite dimensional $V\subseteq U^{*}$;
+			\item $q: U^{*}\to\mathbb{R}$ is a quadratic form;
+			\item $\int_{U}|\langle u, a\rangle|^2\nu(du)<\infty$ for all $a\in U^{*}$;
+			\item 
+			\begin{align*}
+		a\mapsto\left(ip(a)+\int_{U}(e^{i\langle u, a\rangle}-1
+		-i\langle u, a\rangle\bigchi_{B_1}(\langle u, a\rangle))\nu(du)\right) \text{   is negative definite.		}
+			\end{align*}		  
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+\end{omitframe}
+
+\section[]{Timeline}
+\begin{frame}[shrink]{Draft table of content}
+	\textbf{Chapter 1 		Introduction}\\
+	1.1  Motivations and Literature\\
+	1.2  Thesis in short\\
+	\hspace*{1cm}	 1.2.1  Problem statement\\
+	\hspace*{1cm}	 1.2.2  Research objectives\\  
+	\hspace*{1cm}	 1.2.3  Thesis outline\\
+
+	\textbf{Chapter 2		Preliminary}	\\
+
+	\textbf{Chapter 3		Existence and Uniqueness of the solutions}	\\
+
+	\textbf{Chapter 4		Regularity}\\
+	4.1		Spatial regularity\\   
+	4.2		Time regularity\\       
+
+	\textbf{Chapter 5		Ergodicity: Invariance measures and other structural properties}\\
+	5.1		Structural properties\\
+	\hspace*{1cm}	 5.1.1	Markov property\\
+	\hspace*{1cm}	 5.1.2	Irreducibility\\
+	\hspace*{1cm}	 5.1.3  Stochastic continuity\\
+	\hspace*{1cm}    5.1.4  Feller and strong Feller\\
+	\hspace*{1cm}    5.1.5  Integrability of trajectories\\
+	\hspace*{1cm}    5.1.6  Applications: Stochastic Navier-Stokes equations\\ %(unbounded Lipschitz??)\\
+	5.2		Invariance measure\\
+	\hspace*{1cm}	 5.2.1	Existence\\
+	\hspace*{1cm}	 5.2.2	Uniqueness\\
+	\hspace*{2cm}	 	 5.2.2.1  Irreducibility\\
+	\hspace*{2cm}  		 5.2.2.2  Feller and strong Feller properties\\
+	
+   
+\textbf{Appendix}		    
+\end{frame}   
+\begin{frame}{Timeline}
+\tiny{	\begin{table}[ht]
+	\centering
+	\begin{tabular}{l c l l l c c }
+	\hline\hline Research Activities & \multicolumn{2}{c} {Year 1}  &
+	\multicolumn{2}{c} {Year 2} &\multicolumn{2}{c} {Year 3} \\
+	[0.5ex]
+	 & 0-6 & 6-12 & 0-6 & 6-12 & 0-6 & 6-12\\
+	\hline
+	\vspace{0.5cm}
+	 Literature review & {\color{red}$\checkmark$} & {\color{red}$\checkmark$} & $\checkmark$ \\
+	\vspace{0.5cm}
+	Research proposal & {\color{red}$\checkmark$}  \\
+	\vspace{0.5cm}
+	Existence and uniqueness, prepare article 1  &  & {\color{red}$\checkmark$} & $\checkmark$ \\
+	\vspace{0.5cm}
+	Temporal and Spatial Regularity, prepare article 2  &  & $\checkmark$ & {\color{red}$\checkmark$} & $\checkmark$ \\
+	\vspace{0.5cm}
+	Obtain ergodicity results, prepare article 3  & & &   $\checkmark$ & {\color{red}$\checkmark$} \\
+	\vspace{0.5cm}
+	Finalise drafting above articles   & & & & {\color{red}$\checkmark$} & $\checkmark$ \\
+	\vspace{0.5cm}
+	Obtain additional structural results, prepare and write article 4  & & & & & $\checkmark$ & $\checkmark$\\
+	\vspace{0.5cm}
+	Thesis writing & & & & & {\color{red}$\checkmark$} & {\color{red}$\checkmark$}\\% [1ex]
+	\hline
+	\end{tabular}
+	\label{table:nonlin}
+\end{table} }
+\end{frame}
+    
+\section[]{References}
+%\begin{omitframe}
+\begin{frame}[shrink=15]{Key references}
+$\bullet$ \bibentry{MR2734958}\\
+
+$\bullet$ \bibentry{riedle2012ornstein}\\
+
+$\bullet$ \bibentry{riedle2012stochastic}\\
+
+$\bullet$ \bibentry{MR2790373}\\
+
+$\bullet$ \bibentry{MR2875352}\\       
+
+$\bullet$ \bibentry{MR900115}\\
+     
+$\bullet$ \bibentry{MR2356959}\\
+   
+$\bullet$ \bibentry{MR1417491}\\
+
+$\bullet$ \bibentry{MR2095690}
+\end{frame}
+%\end{omitframe}
+\begin{frame}[shrink=15]{Key references}
+	$\bullet$ \bibentry{MR2584982}\\
+	
+	$\bullet$ \bibentry{MR2600121}\\
+
+	$\bullet$ \bibentry{MR2887844}\\
+
+	$\bullet$ \bibentry{MR3005003}\\
+      
+	$\bullet$ \bibentry{MR2853105}\\
+
+	$\bullet$ \bibentry{MR1300150}	\\
+	
+	$\bullet$ \bibentry{flandoli1995ergodicity}
+	\bibliographystyle{plain}  
+	\nobibliography{l'sthesis}
+   
+\end{frame}        
+\begin{frame}[plain,c]
+%\frametitle{A first slide}
+
+\begin{center}
+\Huge {\color{Plum}Thank You!}
+\end{center}
+                               
+\end{frame}
+        
+\end{document}
