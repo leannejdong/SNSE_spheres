@@ -194,10 +194,15 @@ Projecting (1) onto $H$ leads to the abstract evolutionary equation in $u=u(t)=u
 				u(0)=u_0\in V%\,\,x\in\mathbb{R}
 			\end{cases}
 	\end{align*}  
-%Here $G: H\to H$ is a bounded linear operator determines the spatial smoothness of the noise, and $L(t)$ is a $H$-valued L\'evy process.
-%The stokes operator $A$ generate a strongly continuous semigroup $\{S(t): t\geq 0\}$ on $H$.
+\begin{enumerate}
+	\item $G: H\to H$ is a bounded linear operator determines the spatial smoothness of the noise
+	\item $L(t)$ is a $H$-valued L\'evy process
+	\item The stokes operator $A$ generate a strongly continuous semigroup $\{S(t): t\geq 0\}$ on $H$.
+\end{enumerate}
+\end{frame} 
 
-A \textbf{solution} to (2) is a process $\{u(t)\in X,t\geq 0\}$ which can be represented in the form $u(t) = v(t) +z_{\alpha}(t)$, where $\{z_{\alpha}(t), t\in\R\}$ is a stationary Ornstein-Uhlenbeck process $z_{\alpha}$ with drift $-\nu A-C-\alpha I$
+\begin{frame}{My problem}
+	A \textbf{solution} to (2) is a process $\{u(t)\in X,t\geq 0\}$ which can be represented in the form $u(t) = v(t) +z_{\alpha}(t)$, where $\{z_{\alpha}(t), t\in\R\}$ is a stationary Ornstein-Uhlenbeck process $z_{\alpha}$ with drift $-\nu A-C-\alpha I$
 	
 and $v(t)$ is the solution to the problem (with $v_0 = u_0-z_{\alpha}$):
 	\begin{align*}\tag{3}
@@ -210,8 +215,8 @@ This transformed system is interpreted as an integral equation
 \begin{align*}\tag{4}
 	v(t)&=S(t)v_0+{\color{orange}\int_{0}^{t}S(t-s)B(v(s)+z_{\alpha}(s)+\alpha z_{\alpha}(s))ds}
 \end{align*}
-   
-\end{frame} 
+\end{frame}
+
 \begin{frame}{Weak formulation of Stochastic Navier Stokes Equations}
 To study the initial value proble (2), one needs to carefully study the properties of stochastic convolution $$z_{\alpha}(t)=\int^t_0 e^{-\hat{A}(t-s)} GdL(s)$$ which satisfies
 	\begin{align*}\tag{3}
