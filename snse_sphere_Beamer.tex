@@ -40,6 +40,18 @@
 \NewEnviron{omitframe}{}
 \usepackage{lmodern}   
 \usepackage{bib entry}
+% print multiple slides per page draw border around slide
+\usepackage{pgfpages} 
+
+
+
+% put 2 slides on 1 page with space for notes
+%\pgfpagesuselayout{2 on 1}[a4paper, border shrink=5mm]
+
+% settings to draw border around every first 2 slide per sheet
+%\pgfpageslogicalpageoptions{1}{border code=\pgfusepath{stroke}}
+%\pgfpageslogicalpageoptions{2}{border code=\pgfusepath{stroke}}
+
 \nobibliography*
 \let\newblock\relax
 \setbeamertemplate{navigation symbols}{}
@@ -416,6 +428,22 @@ Some technical conditions required are
 \end{enumerate}
 
 \end{frame}
+
+\begin{frame}{Why stochastic fubini theorem is important?}
+	Consider
+	\begin{align*}
+	\int^t_0 f(s)\left(\int^s_0 u\,d B(u)\right)\,dB(s).
+	\end{align*}
+\begin{enumerate}
+	\item The upper limit of the inner integral is the variable we are integrating with respect to.
+	\item From calculus, we need to switch order of integration, i.e.
+	\begin{align*}
+		\int^t_0 f(s)\left(\int^s_0 u\,dB(u)\right)dB(s)=\int^{?}_{?} u\left(\int^{?}_{?} f(s) \,dB(s)\right)dB(u)
+	\end{align*}
+	\item To allow the switch we need to make sure the output from the integration is finite. To this end, we need some technical conditions to ensure both the outer and inner integrals are well defined.
+\end{enumerate}
+\end{frame}
+
 \section{References}
 
 \begin{thebibliography}{9}
